@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+
+# Streamlit secrets
+.streamlit/secrets.toml
+
+# Gmail OAuth credentials
+CLIENT_JASON_GMAIL.json
+token.json
+
+# Environment files
+.env
