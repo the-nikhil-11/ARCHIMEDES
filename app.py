@@ -476,12 +476,29 @@ def send_explanation_email(
         # Load OAuth credentials
         # ------------------------------------------------------------
 
-        creds = Credentials.from_authorized_user_file(
-            "token.json",
-            [
-                "https://www.googleapis.com/auth/gmail.send"
-            ],
-        )
+
+        import json
+        from google.auth.transport.requests import Request
+
+        try:
+            token_json = st.secrets["GMAIL_TOKEN_JSON"]
+        except Exception:
+            token_json = None
+
+        if token_json:
+            creds = Credentials.from_authorized_user_info(
+                json.loads(token_json),
+                ["https://www.googleapis.com/auth/gmail.send"],
+            )
+        else:
+            creds = Credentials.from_authorized_user_file(
+                "token.json",
+                ["https://www.googleapis.com/auth/gmail.send"],
+            )
+
+        if creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+
 
         # ------------------------------------------------------------
         # Build Gmail API service
